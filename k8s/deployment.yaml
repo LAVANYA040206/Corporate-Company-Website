@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: abc-website-container
-        image: abc-technologies
-        imagePullPolicy: Never
+        image: abc-technologies:v1
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
