@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "abc-technologies"
-        CONTAINER_NAME = "abc-website"
+        IMAGE_NAME = "abc-technologies:v1"
+        CONTAINER_NAME = "corporate-website"
     }
 
     stages {
@@ -16,41 +16,33 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                bat 'docker build -t abc-technologies:v1 .'
             }
         }
 
         stage('Stop Old Container') {
             steps {
-                sh '''
-                docker stop $CONTAINER_NAME || true
-                docker rm $CONTAINER_NAME || true
+                bat '''
+                docker stop corporate-website || exit 0
+                docker rm corporate-website || exit 0
                 '''
             }
         }
 
         stage('Run Docker Container') {
             steps {
-                sh '''
-                docker run -d \
-                --name $CONTAINER_NAME \
-                -p 8090:80 \
-                $IMAGE_NAME
-                '''
+                bat 'docker run -d --name corporate-website -p 8090:80 abc-technologies:v1'
             }
         }
-
     }
 
     post {
-
         success {
-            echo 'Website deployed successfully!'
+            echo 'Deployment Successful'
         }
 
         failure {
-            echo 'Deployment failed!'
+            echo 'Deployment Failed'
         }
-
     }
 }
